@@ -1,0 +1,4 @@
+spring:  profiles:    active:    - smart      thymeleaf:    cache: false  mvc:    format:      date-time: yyyy-MM-dd HH:mm:sshr:  salary:
+    def:
+      percent: 5
+    smart:      limit1: 1      limit2: 2.5      limit3: 5      percent1: 1      percent2: 2      percent3: 5      limits:        1: 1        2.5: 2        5: 5        10: 10        7.5: 8
