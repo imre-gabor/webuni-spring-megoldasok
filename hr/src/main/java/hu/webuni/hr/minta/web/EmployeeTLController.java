@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -22,8 +24,14 @@ public class EmployeeTLController {
 
 	@GetMapping("/employees")
 	public String listEmployees(Map<String, Object> model) {
+//	public String listEmployees(ModelMap model) {
+//	public String listEmployees(Model  model) {
 		model.put("employees", allEmployees);
 		model.put("newEmployee", new Employee());
+//		model.addAttribute("employees", allEmployees)
+//			.addAttribute("newEmployee", new Employee())
+//			.addAttribute(new Employee()); //by default "employee"
+		
 		return "employees";
 	}
 
