@@ -8,7 +8,7 @@
 
 	<h1>List of employees:</h1>
 
-	<table border>
+	<table>
 	<thead>
 	<tr>
 		<th>Id
@@ -18,11 +18,14 @@
 		<th>Entry date
 	<tbody>
 		<tr th:each="employee : ${employees}">
-			<td th:text="${employee.employeeId}">Id
-			<td th:text="${employee.name}">Name
-			<td th:text="${employee.jobTitle}">Title
-			<td th:text="${employee.salary}">Salary
-			<td th:text="${employee.dateOfStartWork}">EntryDate
+			<td th:text="${employee.employeeId}">Id</td>
+			<td><a th:href="@{/employees/{id}(id = ${employee.employeeId})}" th:text="${employee.name}">Name</a></td>
+			<td th:text="${employee.jobTitle}">Title</td>
+			<td th:text="${employee.salary}">Salary</td>
+			<td th:text="${employee.dateOfStartWork}">EntryDate</td>
+			<td><a th:href="@{/deleteEmployee/{id}(id=${employee.employeeId})}">Delete</a></td>
+		</tr>
+
 	</table>
 	<br><br>
 	
