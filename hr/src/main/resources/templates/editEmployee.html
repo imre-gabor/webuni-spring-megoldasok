@@ -8,7 +8,7 @@
 
 	<h1>Edit employee:</h1>
 
-	<form th:action="@{/updateEmployee}" method="post" th:object="${employee}">
+	<form th:action="@{/employees/updateEmployee}" method="post" th:object="${employee}">
 		Id: <span th:text="*{employeeId}" > </span><br>
 		<input th:field="*{employeeId}" type="hidden" />
 		Name: <input th:field="*{name}" /><br>

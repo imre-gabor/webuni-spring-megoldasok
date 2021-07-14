@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import hu.webuni.hr.minta.dto.EmployeeDto;
+import hu.webuni.hr.minta.model.Employee;
+import hu.webuni.hr.minta.service.EmployeeService;
 
 
 @RestController
@@ -32,6 +35,8 @@ public class EmployeeController {
 		employees.put(2L, new EmployeeDto(2, "Nagy Péter", "menedzser", 400_000, LocalDateTime.of(2020, 11, 10, 10, 0)));
 	}
 	
+	@Autowired
+	EmployeeService employeeService;
 	
 	@GetMapping
 	public List<EmployeeDto> getEmployees(@RequestParam(required = false) Integer minSalary) {
@@ -72,5 +77,10 @@ public class EmployeeController {
 	@DeleteMapping("/{id}")
 	public void deleteEmployee(@PathVariable long id) {
 		employees.remove(id);
+	}
+	
+	@PostMapping("/payRaise")
+	public int getPayRaisePercent(@RequestBody Employee employee) {
+		return employeeService.getPayRaisePercent(employee);
 	}
 }
