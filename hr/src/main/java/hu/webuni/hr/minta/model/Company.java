@@ -11,13 +11,17 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+@Entity
 public class Company {
 	
+	@Id
+	@GeneratedValue
 	private Long id;
 	private int registrationNumber;
 	private String name;
 	private String address;
 	
+	@OneToMany(mappedBy = "company")
 	private List<Employee> employees;
 	
 	public Company() {
@@ -64,4 +68,15 @@ public class Company {
 		this.address = address;
 	}
 
+	public void addEmployee(Employee employee) {
+		if(this.employees == null)
+			this.employees = new ArrayList<>();
+		this.employees.add(employee);
+		employee.setCompany(this);
+	}
+
+	public List<Employee> getEmployees() {
+		return employees;
+	}
+	
 }

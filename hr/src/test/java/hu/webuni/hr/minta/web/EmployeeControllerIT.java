@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -29,11 +30,14 @@ public class EmployeeControllerIT {
 		List<EmployeeDto> employeesBefore = getAllEmployees();
 
 		EmployeeDto newEmployee = new EmployeeDto(0L, "ABC", "student", 200000, LocalDateTime.of(2019, 01, 01, 8, 0, 0));
-		saveEmployee(newEmployee).expectStatus().isOk();
+		saveEmployee(newEmployee)
+		.expectStatus()
+		.isOk();
 
 		List<EmployeeDto> employeesAfter = getAllEmployees();
 
 		assertThat(employeesAfter.size()).isEqualTo(employeesBefore.size() + 1);
+		
 		assertThat(employeesAfter.get(employeesAfter.size()-1))
 			.usingRecursiveComparison()
 			.ignoringFields("id")
@@ -45,7 +49,9 @@ public class EmployeeControllerIT {
 		List<EmployeeDto> employeesBefore = getAllEmployees();
 
 		EmployeeDto newEmployee = newInvalidEmployee();
-		saveEmployee(newEmployee).expectStatus().isBadRequest();
+		saveEmployee(newEmployee)
+		.expectStatus()
+		.isBadRequest();
 
 		List<EmployeeDto> employeesAfter = getAllEmployees();
 
@@ -98,17 +104,33 @@ public class EmployeeControllerIT {
 	
 	private ResponseSpec modifyEmployee(EmployeeDto newEmployee) {
 		String path = BASE_URI + "/" + newEmployee.getId();
-		return webTestClient.put().uri(path).bodyValue(newEmployee).exchange();
+		return webTestClient
+				.put()
+				.uri(path)
+				.bodyValue(newEmployee)
+				.exchange();
 	}
 	
 	private ResponseSpec saveEmployee(EmployeeDto newEmployee) {
-		return webTestClient.post().uri(BASE_URI).bodyValue(newEmployee).exchange();
+		return webTestClient
+				.post()
+				.uri(BASE_URI)
+				.bodyValue(newEmployee)
+				.exchange();
 	}
 
 	private List<EmployeeDto> getAllEmployees() {
-		List<EmployeeDto> responseList = webTestClient.get().uri(BASE_URI).exchange().expectStatus().isOk()
-				.expectBodyList(EmployeeDto.class).returnResult().getResponseBody();
-		Collections.sort(responseList, (a1, a2) -> Long.compare(a1.getId(), a2.getId()));
+		List<EmployeeDto> responseList = 
+				webTestClient
+				.get()
+				.uri(BASE_URI)
+				.exchange()
+				.expectStatus()
+				.isOk()
+				.expectBodyList(EmployeeDto.class)
+				.returnResult()
+				.getResponseBody();
+		Collections.sort(responseList, Comparator.comparing(EmployeeDto::getId));
 		return responseList;
 	}
 

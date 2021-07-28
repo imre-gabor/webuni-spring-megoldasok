@@ -2,13 +2,24 @@ package hu.webuni.hr.minta.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Employee {
 
+	@Id
+	@GeneratedValue
 	private Long employeeId;
 	private String name;
 	private String jobTitle;
 	private int salary;
 	private LocalDateTime dateOfStartWork;
+	
+	@ManyToOne
+	private Company company;
 	
 	public Employee() {
 	}
@@ -64,6 +75,39 @@ public class Employee {
 
 	public void setDateOfStartWork(LocalDateTime dateOfStartWork) {
 		this.dateOfStartWork = dateOfStartWork;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((employeeId == null) ? 0 : employeeId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Employee other = (Employee) obj;
+		if (employeeId == null) {
+			if (other.employeeId != null)
+				return false;
+		} else if (!employeeId.equals(other.employeeId))
+			return false;
+		return true;
 	}
 
 }
