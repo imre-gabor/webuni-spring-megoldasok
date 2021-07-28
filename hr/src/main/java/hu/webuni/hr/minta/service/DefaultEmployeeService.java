@@ -7,7 +7,7 @@ import hu.webuni.hr.minta.config.HrConfigProperties;
 import hu.webuni.hr.minta.model.Employee;
 
 @Service
-public class DefaultEmployeeService implements EmployeeService {
+public class DefaultEmployeeService extends AbstractEmployeeService {
 	@Autowired
 	HrConfigProperties config;
 

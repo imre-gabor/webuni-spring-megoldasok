@@ -1,13 +1,12 @@
 package hu.webuni.hr.minta.web;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import hu.webuni.hr.minta.dto.EmployeeDto;
+import hu.webuni.hr.minta.mapper.EmployeeMapper;
 import hu.webuni.hr.minta.model.Employee;
 import hu.webuni.hr.minta.service.EmployeeService;
 
@@ -28,59 +29,61 @@ import hu.webuni.hr.minta.service.EmployeeService;
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
-	private Map<Long, EmployeeDto> employees = new HashMap<>();
-	
-	{
-		employees.put(1L, new EmployeeDto(1, "Kis Gábor", "osztályvezető", 300_000, LocalDateTime.of(2020, 10, 10, 10, 0)));
-		employees.put(2L, new EmployeeDto(2, "Nagy Péter", "menedzser", 400_000, LocalDateTime.of(2020, 11, 10, 10, 0)));
-	}
-	
 	@Autowired
 	EmployeeService employeeService;
 	
+	@Autowired
+	EmployeeMapper employeeMapper;
+
+	
 	@GetMapping
 	public List<EmployeeDto> getEmployees(@RequestParam(required = false) Integer minSalary) {
-		if(minSalary == null)
-			return new ArrayList<>(employees.values());
-		else
-			return employees.values().stream()
-					.filter(e -> e.getSalary() > minSalary)
-					.collect(Collectors.toList());
+		List<Employee> employees = null;
+		if(minSalary == null) {
+			employees = employeeService.findAll();
+		} else {
+			//employees = employeeRepository.findBySalaryGreaterThan(minSalary);
+		}
+		return employeeMapper.employeesToDtos(employees);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<EmployeeDto> getById(@PathVariable long id) {
-		EmployeeDto EmployeeDto = employees.get(id);
-		if(EmployeeDto != null)
-			return ResponseEntity.ok(EmployeeDto);
-		else
-			return ResponseEntity.notFound().build();
+	public EmployeeDto getById(@PathVariable long id) {
+		Employee employee = findByIdOrThrow(id);
+		return employeeMapper.employeeToDto(employee);
 	}
+	
+	private Employee findByIdOrThrow(long id) {
+		return employeeService.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+	}
+
 	
 	@PostMapping
 	public EmployeeDto createEmployee(@RequestBody EmployeeDto employeeDto) {
-		employees.put(employeeDto.getId(), employeeDto);
-		return employeeDto;
+		return employeeMapper.employeeToDto(employeeService.save(employeeMapper.dtoToEmployee(employeeDto)));
 	}
+
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<EmployeeDto> modifyEmployee(@PathVariable long id, @RequestBody EmployeeDto employeeDto) {
-		if(!employees.containsKey(id)) {
+		employeeDto.setId(id);
+		Employee updatedEmployee = employeeService.update(employeeMapper.dtoToEmployee(employeeDto));
+		if(updatedEmployee == null) {
 			return ResponseEntity.notFound().build();
+		} else {
+			return ResponseEntity.ok(employeeMapper.employeeToDto(updatedEmployee));
 		}
 		
-		employeeDto.setId(id);
-		employees.put(id, employeeDto);
-		return ResponseEntity.ok(employeeDto);
 	}
 	
 	@DeleteMapping("/{id}")
 	public void deleteEmployee(@PathVariable long id) {
-		employees.remove(id);
+		employeeService.delete(id);
 	}
 	
 	@PostMapping("/payRaise")
-	public int getPayRaisePercent(@RequestBody Employee employee) {
+	public int getPayRaise(@RequestBody Employee employee) {
 		return employeeService.getPayRaisePercent(employee);
 	}
+
 }
