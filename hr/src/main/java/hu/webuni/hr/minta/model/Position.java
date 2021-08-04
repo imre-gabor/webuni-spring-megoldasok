@@ -16,8 +16,10 @@ public class Position {
 	private String name;
 	private Qualification qualification;
 	
-//	@OneToMany(mappedBy = "position")
-//	private List<Employee> employees;
+//	private int minSalary;
+	
+	@OneToMany(mappedBy = "position")
+	private List<Employee> employees;
 	
 	
 	public Position() {
@@ -45,6 +47,22 @@ public class Position {
 	}
 	public void setQualification(Qualification qualification) {
 		this.qualification = qualification;
+	}
+
+//	public int getMinSalary() {
+//		return minSalary;
+//	}
+//
+//	public void setMinSalary(int minSalary) {
+//		this.minSalary = minSalary;
+//	}
+
+	public List<Employee> getEmployees() {
+		return employees;
+	}
+
+	public void setEmployees(List<Employee> employees) {
+		this.employees = employees;
 	}
 	
 }

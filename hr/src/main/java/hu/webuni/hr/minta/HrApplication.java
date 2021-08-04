@@ -41,8 +41,8 @@ public class HrApplication implements CommandLineRunner {
 			
 			int origSalary = 100;
 			LocalDateTime limitDay = LocalDateTime.now().minusDays((long)(limit*365));
-			Employee e1 = new Employee(1L, "Nagy Péter", "fejlesztő", origSalary, limitDay.plusDays(1));
-			Employee e2 = new Employee(2L, "Kis Gábor", "projektmenedzser", origSalary, limitDay.minusDays(1));
+			Employee e1 = new Employee(1L, "Nagy Péter", origSalary, limitDay.plusDays(1));
+			Employee e2 = new Employee(2L, "Kis Gábor", origSalary, limitDay.minusDays(1));
 
 			salaryService.setNewSalary(e1);
 			salaryService.setNewSalary(e2);

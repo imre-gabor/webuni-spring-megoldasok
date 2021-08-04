@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -145,9 +147,14 @@ public class CompanyController {
     
 	@GetMapping(params = "aboveSalary")
 	public List<CompanyDto> getCompaniesAboveASalary(@RequestParam int aboveSalary,
-			@RequestParam(required = false) Boolean full) {
-		List<Company> allCompanies = companyRepository.findByEmployeeWithSalaryHigherThan(aboveSalary);
-		return mapCompanies(allCompanies, full);
+			@RequestParam(required = false) Boolean full, Pageable pageable) {
+		Page<Company> allCompanies = companyRepository.findByEmployeeWithSalaryHigherThan(aboveSalary, pageable);
+		System.out.println(allCompanies.getTotalElements());
+		System.out.println(allCompanies.getTotalPages());
+		System.out.println(allCompanies.isFirst());
+		System.out.println(allCompanies.isLast());
+		
+		return mapCompanies(allCompanies.getContent(), full);
 	}
 
 	private List<CompanyDto> mapCompanies(List<Company> allCompanies, Boolean full) {

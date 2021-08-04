@@ -20,10 +20,6 @@ import hu.webuni.hr.minta.model.Employee;
 public class EmployeeTLController {
 
 	private List<Employee> allEmployees = new ArrayList<>();
-	
-	{
-		allEmployees.add(new Employee(1L, "Kis Gábor", "osztályvezető", 100000, LocalDateTime.of(2012, 1, 1, 8, 0, 0)));
-	}
 
 	@GetMapping
 	public String listEmployees(Map<String, Object> model) {

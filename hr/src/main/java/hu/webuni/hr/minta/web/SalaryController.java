@@ -15,8 +15,9 @@ public class SalaryController {
 	@Autowired
 	SalaryService salaryService;
 	
+	//más módon is lehetne a paramétereket megkapni, pl. bodyban JSON dto-ban
 	@PutMapping("/{positionName}/raiseMin/{minSalary}/{companyId}")
 	public void raiseMinSalary(@PathVariable String positionName, @PathVariable int minSalary, @PathVariable long companyId) {
-//		salaryService.raiseMinimalSalary(positionName, minSalary);
+		salaryService.raiseMinimalSalary(positionName, minSalary, companyId);
 	}
 }

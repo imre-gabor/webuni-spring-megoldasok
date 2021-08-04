@@ -83,9 +83,6 @@ public class Company {
 		return employees;
 	}
 
-
-
-
 	public CompanyType getCompanyType() {
 		return companyType;
 	}

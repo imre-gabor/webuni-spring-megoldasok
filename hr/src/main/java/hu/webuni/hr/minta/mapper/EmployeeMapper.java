@@ -14,12 +14,12 @@ public interface EmployeeMapper {
 	List<EmployeeDto> employeesToDtos(List<Employee> employees);
 
 	@Mapping(target = "id", source = "employeeId")
-	@Mapping(target = "title", source = "jobTitle")
+	@Mapping(target = "title", source = "position.name")
 	@Mapping(target = "entryDate", source = "dateOfStartWork")
 	EmployeeDto employeeToDto(Employee employee);
 
 	@Mapping(source = "id", target = "employeeId")
-	@Mapping(source = "title", target = "jobTitle")
+	@Mapping(source = "title", target = "position.name")
 	@Mapping(source = "entryDate", target = "dateOfStartWork")
 	Employee dtoToEmployee(EmployeeDto employeeDto);
 
