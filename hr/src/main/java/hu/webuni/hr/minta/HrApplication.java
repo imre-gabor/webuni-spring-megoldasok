@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import hu.webuni.hr.minta.config.HrConfigProperties;
 import hu.webuni.hr.minta.config.HrConfigProperties.Smart;
 import hu.webuni.hr.minta.model.Employee;
+import hu.webuni.hr.minta.service.InitDbService;
 import hu.webuni.hr.minta.service.SalaryService;
 
 @SpringBootApplication
@@ -22,6 +23,9 @@ public class HrApplication implements CommandLineRunner {
 	
 	@Autowired
 	HrConfigProperties config;
+	
+	@Autowired
+	InitDbService initDbService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(HrApplication.class, args);
@@ -46,6 +50,7 @@ public class HrApplication implements CommandLineRunner {
 			System.out.format("1 nappal a %.2f éves határ előtt az új fizetés %d%n", limit, e1.getSalary());
 			System.out.format("1 nappal a %.2f éves határ után az új fizetés %d%n", limit, e2.getSalary());
 		}
+		initDbService.initDb();
 		
 	}
 
