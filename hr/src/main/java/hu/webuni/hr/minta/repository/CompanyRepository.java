@@ -1,9 +1,11 @@
 package hu.webuni.hr.minta.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -27,5 +29,14 @@ public interface CompanyRepository extends JpaRepository<Company, Long>{
 			+ "GROUP BY e.position.name "
 			+ "ORDER BY avg(e.salary) DESC")
 	public List<AverageSalaryByPosition> findAverageSalariesByPosition(long companyId);
+	
+	@EntityGraph("Company.full")
+	@Query("SELECT c FROM Company c")
+	public List<Company> findAllWithEmployees();
+
+
+	@EntityGraph("Company.full")
+	@Query("SELECT c FROM Company c WHERE c.id=:id")
+	public Optional<Company> findByIdWithEmployees(long id);
 	
 }

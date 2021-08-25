@@ -3,6 +3,7 @@ package hu.webuni.hr.minta.web;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +48,7 @@ public class CompanyController {
 	/* 1. megoldás, kézi mappelés a paraméter alapján */
 	@GetMapping
 	public List<CompanyDto> getCompanies(@RequestParam(required = false) Boolean full) {
-		List<Company> companies = companyService.findAll();
+		List<Company> companies = BooleanUtils.isTrue(full) ? companyRepository.findAllWithEmployees() : companyService.findAll();
 		return mapCompanies(companies, full);
 		
 		

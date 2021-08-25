@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import hu.webuni.hr.minta.model.Company;
 import hu.webuni.hr.minta.model.Employee;
@@ -19,6 +20,9 @@ public class CompanyService  {
 	
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	PositionService positionService;
 
 	public Company save(Company company) {
 		return companyRepository.save(company);
@@ -42,35 +46,34 @@ public class CompanyService  {
 		companyRepository.deleteById(id);
 	}
 
+	@Transactional
 	public Company addEmployee(long id, Employee employee) {
-		Company company = findById(id).get();
-		company.addEmployee(employee);
-		
+		Company company = companyRepository.findByIdWithEmployees(id).get();
+		positionService.setPositionForEmployee(employee);
 		// companyRepository.save(company); --> csak cascade merge esetén működik
-		employeeRepository.save(employee);
+		company.addEmployee(employeeRepository.save(employee));
 		
 		return company;
 	}
 	
+	@Transactional
 	public Company deleteEmployee(long id, long employeeId) {
 		Company company = findById(id).get();
 		Employee employee = employeeRepository.findById(employeeId).get();
 		employee.setCompany(null);
 		company.getEmployees().remove(employee);
-		employeeRepository.save(employee);
 		return company;
 	}
 	
+	@Transactional
 	public Company replaceEmployees(long id, List<Employee> employees) {
 		Company company = findById(id).get();
 		company.getEmployees().forEach(emp -> emp.setCompany(null));
 		company.getEmployees().clear();
 		
 		employees.forEach(emp ->{
-			company.addEmployee(emp);
-			Employee savedEmployee = employeeRepository.save(emp);
-			company.getEmployees()
-				.set(company.getEmployees().size()-1, savedEmployee);
+			positionService.setPositionForEmployee(emp);
+			company.addEmployee(employeeRepository.save(emp));
 		});
 		
 		return company;

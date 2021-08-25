@@ -5,7 +5,9 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import hu.webuni.hr.minta.dto.CompanyDto;
 import hu.webuni.hr.minta.dto.EmployeeDto;
+import hu.webuni.hr.minta.model.Company;
 import hu.webuni.hr.minta.model.Employee;
 
 @Mapper(componentModel = "spring")
@@ -24,5 +26,8 @@ public interface EmployeeMapper {
 	Employee dtoToEmployee(EmployeeDto employeeDto);
 
 	List<Employee> dtosToEmployees(List<EmployeeDto> employees);
+	
+	@Mapping(target = "employees", ignore = true)
+	CompanyDto companyToDto(Company company);
 
 }

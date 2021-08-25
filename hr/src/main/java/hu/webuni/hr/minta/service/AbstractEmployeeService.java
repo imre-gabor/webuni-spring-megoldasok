@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import hu.webuni.hr.minta.model.Company;
@@ -22,15 +23,29 @@ public abstract class AbstractEmployeeService implements EmployeeService {
 	@Autowired
 	EmployeeRepository employeeRepository;
 	
-	@Override
-	public Employee save(Employee employee) {
-		return employeeRepository.save(employee);
-	}
+	@Autowired
+	PositionService positionService;
 	
 	@Override
+	@Transactional
+	public Employee save(Employee employee) {
+		clearCompanyAndSetPosition(employee);
+		return employeeRepository.save(employee);
+	}
+
+	private void clearCompanyAndSetPosition(Employee employee) {
+		employee.setCompany(null);
+		positionService.setPositionForEmployee(employee);
+	}
+
+	
+	
+	@Override
+	@Transactional
 	public Employee update(Employee employee) {
 		if(!employeeRepository.existsById(employee.getEmployeeId()))
 			return null;
+		clearCompanyAndSetPosition(employee);	
 		return employeeRepository.save(employee);
 	}
 
