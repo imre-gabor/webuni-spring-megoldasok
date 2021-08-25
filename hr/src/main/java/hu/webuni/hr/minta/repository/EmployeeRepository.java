@@ -34,7 +34,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long>{
 			+ "(SELECT e2.id "
 			+ "FROM Employee e2 "
 			+ "WHERE e2.position.name = :positionName "
-			+ "AND e2.company.id = :companyId"
+			+ "AND e2.company.id = :companyId "
+			+ "AND e2.salary < :minSalary"
 			+ ")")
 	void updateSalaries(String positionName, int minSalary, long companyId);
 
