@@ -47,6 +47,11 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -83,6 +88,11 @@
 							<version>${org.mapstruct.version}</version>
 						</path>
 						<!-- other annotation processors -->
+						<path>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>5.3.21.Final</version>
+                        </path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
